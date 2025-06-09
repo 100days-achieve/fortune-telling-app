@@ -16,8 +16,8 @@ RUN apt-get update -qq && \
 # Set working directory
 WORKDIR /rails
 
-# Install bundler
-RUN gem install bundler
+# Install bundler and foreman
+RUN gem install bundler foreman
 
 # Copy Gemfile and install gems
 COPY Gemfile Gemfile.lock ./
