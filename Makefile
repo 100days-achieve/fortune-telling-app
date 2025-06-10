@@ -1,4 +1,4 @@
-.PHONY: help build up down restart logs shell console db-create db-migrate db-seed db-reset test clean test-setup test-reset solid-queue-setup master-key-setup env-setup
+.PHONY: help build up down restart logs shell console db-create db-migrate db-seed db-reset test clean test-setup test-reset solid-queue-setup tailwind-setup tailwind-build tailwind-watch master-key-setup env-setup
 
 # デフォルトターゲット
 help: ## このヘルプメッセージを表示
@@ -67,11 +67,22 @@ clean: ## 不要なDockerリソースを削除
 solid-queue-setup: ## Solid Queueのセットアップ（テーブル作成）
 	docker compose run --rm web rails runner "load 'db/queue_schema.rb'"
 
-setup: ## 初回セットアップ（ビルド→起動→Solid Queue→DB設定→テスト環境準備）
+tailwind-setup: ## TailwindCSSのセットアップとビルド
+	docker compose exec web rails tailwindcss:install
+	docker compose exec web rails tailwindcss:build
+
+tailwind-build: ## TailwindCSSをビルド
+	docker compose exec web rails tailwindcss:build
+
+tailwind-watch: ## TailwindCSSをwatch mode で起動（開発時用）
+	docker compose exec web rails tailwindcss:watch
+
+setup: ## 初回セットアップ（ビルド→起動→Solid Queue→DB設定→Tailwind設定→テスト環境準備）
 	make build
 	make up-d
 	sleep 10
 	make solid-queue-setup
+	make tailwind-setup
 	make db-setup
 	make test-setup
 	@echo "セットアップ完了！ http://localhost:3002 でアクセスできます"

@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+/* カスタムスタイル */
+@layer components {
+  .mystical-gradient {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  }
+  
+  .shimmer-text {
+    background: linear-gradient(45deg, #ffd700, #ffb347, #ffd700);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 2s infinite;
+  }
+  
+  @keyframes shimmer {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.8; }
+  }
+} 
