@@ -16,24 +16,26 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
       password: "password"
     }
     assert_redirected_to root_url
+    assert authenticated?
   end
 
-    test "should not create session with invalid credentials" do
+  test "should not create session with invalid credentials" do
     post session_url, params: {
-      email_address: "invalid@example.com",
-      password: "wrongpassword"
+      email_address: @user.email_address,
+      password: "wrong_password"
     }
-    assert_redirected_to new_session_url
+    assert_redirected_to new_session_path
+    assert_not authenticated?
   end
 
   test "should destroy session" do
-    # ログイン
-    post session_url, params: {
-      email_address: @user.email_address,
-      password: "password"
-    }
+    login_as(@user)
+    delete session_url
+    assert_redirected_to new_session_path
+    assert_not authenticated?
+  end
 
-    # ログアウト
+  test "should redirect to login when accessing destroy without session" do
     delete session_url
     assert_redirected_to new_session_url
   end
